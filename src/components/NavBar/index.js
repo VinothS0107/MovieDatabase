@@ -27,23 +27,23 @@ const Header = props => {
           movieDB
         </Link>
       </h1>
-      <ul className="pages-list">
-        <li className="pages-cont">
+      <div className="pages-list">
+        <h1 className="pages-cont">
           <Link to="/" className={isSelected}>
             Popular
           </Link>
-        </li>
-        <li className="pages-cont">
+        </h1>
+        <h1 className="pages-cont">
           <Link to="/top-rated" className={isTopRated}>
             Top Rated
           </Link>
-        </li>
+        </h1>
         <li className="pages-cont">
           <Link to="/upcoming" className={isUpcoming}>
             Upcoming
           </Link>
         </li>
-      </ul>
+      </div>
       <div className="search-container">
         <input
           type="search"
@@ -52,8 +52,8 @@ const Header = props => {
           value={enterValue}
           onChange={onChangeEnter}
         />
-        <button type="button" className="button-img">
-          <BsSearch className="search-butn" onClick={onSearchItem} />
+        <button type="button" className="buttonSearch" onClick={onSearchItem}>
+          Search
         </button>
       </div>
     </nav>

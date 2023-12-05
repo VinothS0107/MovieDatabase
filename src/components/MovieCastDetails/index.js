@@ -42,21 +42,24 @@ class MovieCastDetails extends Component {
     const {movieCast} = this.state
 
     return (
-      <ul className="castCrew">
-        {movieCast.map(each => (
-          <li className="castCrewEach">
-            <img
-              src={`https://image.tmdb.org/t/p/original${each.profilePath}`}
-              alt={each.id}
-              className="profile"
-            />
-            <h1 className="nameList">
-              {each.originalName} <span className="name-as">as</span>{' '}
-              {each.character}
-            </h1>
-          </li>
-        ))}
-      </ul>
+      <>
+        <h1 className="castItem">Cast</h1>
+        <ul className="castCrew">
+          {movieCast.map(each => (
+            <li className="castCrewEach">
+              <img
+                src={`https://image.tmdb.org/t/p/original${each.profilePath}`}
+                alt={each.id}
+                className="profile"
+              />
+              <h1 className="nameList">
+                {each.originalName} <span className="name-as">as</span>{' '}
+                {each.character}
+              </h1>
+            </li>
+          ))}
+        </ul>
+      </>
     )
   }
 }

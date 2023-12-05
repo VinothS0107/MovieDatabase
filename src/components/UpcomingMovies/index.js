@@ -32,33 +32,58 @@ export default class UpcomingMovie extends Component {
   upcomingMovieData = async key => {
     this.setState({status: apiStatusConstants.inProgress})
     const {searchedValue} = this.state
-    const url = `https://api.themoviedb.org/3/movie/upcoming?api_key=${key}&language=en-US&page=1&query=${searchedValue}`
-    const options = {
-      method: 'GET',
-    }
-    const response = await fetch(url, options)
-    if (response.ok === true) {
-      const data = await response.json()
-      const updatedData = data.results.map(result => ({
-        backdropPath: result.backdrop_path,
-        id: result.id,
-        adult: result.adult,
-        genreIds: result.genre_ids,
-        originalLanguage: result.original_language,
-        overview: result.overview,
-        popularity: result.popularity,
-        posterPath: result.poster_path,
-        releaseDate: result.release_date,
-        title: result.title,
-        video: result.video,
-        voteAverage: result.vote_average,
-        voteCount: result.vote_count,
-      }))
+    if (searchedValue === '') {
+      const upcomingMoviesURL = `https://api.themoviedb.org/3/movie/top_rated?api_key=${key}&language=en-US&page=1&query=${searchedValue}`
 
-      this.setState({
-        upcomingMovies: updatedData,
-        status: apiStatusConstants.success,
-      })
+      const response = await fetch(upcomingMoviesURL)
+      if (response.ok === true) {
+        const data = await response.json()
+        const updatedData = data.results.map(result => ({
+          backdropPath: result.backdrop_path,
+          id: result.id,
+          adult: result.adult,
+          genreIds: result.genre_ids,
+          originalLanguage: result.original_language,
+          overview: result.overview,
+          popularity: result.popularity,
+          posterPath: result.poster_path,
+          releaseDate: format(new Date(result.release_date), 'MMM dd ,yyyy'),
+          title: result.title,
+          video: result.video,
+          voteAverage: result.vote_average,
+          voteCount: result.vote_count,
+        }))
+
+        this.setState({
+          upcomingMovies: updatedData,
+          status: apiStatusConstants.success,
+        })
+      }
+    } else {
+      const upcomingMoviesURL = `https://api.themoviedb.org/3/search/movie?api_key=${key}&language=en-US&query=${searchedValue}&page=1`
+      const response = await fetch(upcomingMoviesURL)
+      if (response.ok === true) {
+        const data = await response.json()
+        const updatedData = data.results.map(result => ({
+          backdropPath: result.backdrop_path,
+          id: result.id,
+          adult: result.adult,
+          genreIds: result.genre_ids,
+          originalLanguage: result.original_language,
+          overview: result.overview,
+          popularity: result.popularity,
+          posterPath: result.poster_path,
+          releaseDate: result.release_date,
+          title: result.title,
+          video: result.video,
+          voteAverage: result.vote_average,
+          voteCount: result.vote_count,
+        }))
+        this.setState({
+          upcomingMovies: updatedData,
+          status: apiStatusConstants.success,
+        })
+      }
     }
   }
 
@@ -70,7 +95,7 @@ export default class UpcomingMovie extends Component {
   onSearchClick = event => {
     event.preventDefault()
     const {search} = this.state
-    this.setState({searchedValue: search, search: ''})
+    this.setState({searchedValue: search, search: ''}, this.componentDidMount)
   }
 
   renderLoader = () => (
@@ -87,25 +112,27 @@ export default class UpcomingMovie extends Component {
     return (
       <ul className="popular-movies">
         {upcomingMovies.map(each => (
-          <Link
-            to={`/movie/${each.id}`}
-            key={each.id}
-            className="each-movie-link"
-          >
-            <li key={each.id} className="list-movies">
-              <img
-                src={`https://image.tmdb.org/t/p/original${each.posterPath}`}
-                className="poster_image"
-                alt={each.title}
-              />
-              <div className="content">
-                <h1 className="movie-title">{each.title}</h1>
-                <p className="movie-date">
-                  {format(new Date(`${each.releaseDate}`), 'MMM dd ,yyyy')}
-                </p>
-              </div>
-            </li>
-          </Link>
+          <li key={each.id} className="list-movies">
+            <img
+              src={`https://image.tmdb.org/t/p/original${each.posterPath}`}
+              className="poster_image"
+              alt={each.title}
+            />
+            <p className="rating">{Math.ceil(each.voteAverage * 10) / 10}</p>
+            <div className="content">
+              <h1 className="movie-title">{each.title}</h1>
+              <p className="movie-date">{each.releaseDate}</p>
+              <Link
+                to={`/movie/${each.id}`}
+                key={each.id}
+                className="each-movie-link "
+              >
+                <button type="button" className="viewDetails">
+                  View Details
+                </button>
+              </Link>
+            </div>
+          </li>
         ))}
       </ul>
     )
