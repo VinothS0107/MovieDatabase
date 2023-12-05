@@ -86,7 +86,7 @@ class MovieDetails extends Component {
   )
 
   renderSuccessView = () => {
-    const {singleMovie, genresState, status} = this.state
+    const {singleMovie, genresState} = this.state
     const year = getYear(new Date(singleMovie.releaseDate))
 
     return (

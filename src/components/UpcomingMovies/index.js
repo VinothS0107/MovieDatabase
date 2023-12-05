@@ -21,8 +21,6 @@ export default class UpcomingMovie extends Component {
   state = {
     upcomingMovies: [],
     status: apiStatusConstants.initial,
-    search: '',
-    searchedValue: '',
   }
 
   componentDidMount() {
@@ -31,71 +29,31 @@ export default class UpcomingMovie extends Component {
 
   upcomingMovieData = async key => {
     this.setState({status: apiStatusConstants.inProgress})
-    const {searchedValue} = this.state
-    if (searchedValue === '') {
-      const upcomingMoviesURL = `https://api.themoviedb.org/3/movie/top_rated?api_key=${key}&language=en-US&page=1&query=${searchedValue}`
+    const upcomingMoviesURL = `https://api.themoviedb.org/3/movie/top_rated?api_key=${key}&language=en-US&page=1`
+    const response = await fetch(upcomingMoviesURL)
+    if (response.ok === true) {
+      const data = await response.json()
+      const updatedData = data.results.map(result => ({
+        backdropPath: result.backdrop_path,
+        id: result.id,
+        adult: result.adult,
+        genreIds: result.genre_ids,
+        originalLanguage: result.original_language,
+        overview: result.overview,
+        popularity: result.popularity,
+        posterPath: result.poster_path,
+        releaseDate: format(new Date(result.release_date), 'MMM dd ,yyyy'),
+        title: result.title,
+        video: result.video,
+        voteAverage: result.vote_average,
+        voteCount: result.vote_count,
+      }))
 
-      const response = await fetch(upcomingMoviesURL)
-      if (response.ok === true) {
-        const data = await response.json()
-        const updatedData = data.results.map(result => ({
-          backdropPath: result.backdrop_path,
-          id: result.id,
-          adult: result.adult,
-          genreIds: result.genre_ids,
-          originalLanguage: result.original_language,
-          overview: result.overview,
-          popularity: result.popularity,
-          posterPath: result.poster_path,
-          releaseDate: format(new Date(result.release_date), 'MMM dd ,yyyy'),
-          title: result.title,
-          video: result.video,
-          voteAverage: result.vote_average,
-          voteCount: result.vote_count,
-        }))
-
-        this.setState({
-          upcomingMovies: updatedData,
-          status: apiStatusConstants.success,
-        })
-      }
-    } else {
-      const upcomingMoviesURL = `https://api.themoviedb.org/3/search/movie?api_key=${key}&language=en-US&query=${searchedValue}&page=1`
-      const response = await fetch(upcomingMoviesURL)
-      if (response.ok === true) {
-        const data = await response.json()
-        const updatedData = data.results.map(result => ({
-          backdropPath: result.backdrop_path,
-          id: result.id,
-          adult: result.adult,
-          genreIds: result.genre_ids,
-          originalLanguage: result.original_language,
-          overview: result.overview,
-          popularity: result.popularity,
-          posterPath: result.poster_path,
-          releaseDate: result.release_date,
-          title: result.title,
-          video: result.video,
-          voteAverage: result.vote_average,
-          voteCount: result.vote_count,
-        }))
-        this.setState({
-          upcomingMovies: updatedData,
-          status: apiStatusConstants.success,
-        })
-      }
+      this.setState({
+        upcomingMovies: updatedData,
+        status: apiStatusConstants.success,
+      })
     }
-  }
-
-  onSearchValue = event => {
-    const search = event.target.value
-    this.setState({search})
-  }
-
-  onSearchClick = event => {
-    event.preventDefault()
-    const {search} = this.state
-    this.setState({searchedValue: search, search: ''}, this.componentDidMount)
   }
 
   renderLoader = () => (
@@ -107,7 +65,7 @@ export default class UpcomingMovie extends Component {
   )
 
   renderSuccess = () => {
-    const {upcomingMovies, status} = this.state
+    const {upcomingMovies} = this.state
 
     return (
       <ul className="popular-movies">
@@ -139,15 +97,11 @@ export default class UpcomingMovie extends Component {
   }
 
   render() {
-    const {search, status} = this.state
+    const {status} = this.state
 
     return (
       <>
-        <Header
-          enterValue={search}
-          onSearchEnter={this.onSearchValue}
-          onSearchClick={this.onSearchClick}
-        />
+        <Header />
         {status === apiStatusConstants.inProgress
           ? this.renderLoader()
           : this.renderSuccess()}

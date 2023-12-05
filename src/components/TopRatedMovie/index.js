@@ -19,8 +19,6 @@ class TopRatedMovie extends Component {
   state = {
     topRatedMoviesData: [],
     status: apiStatusConstants.initial,
-    search: '',
-    searchedValue: '',
   }
 
   componentDidMount() {
@@ -29,71 +27,32 @@ class TopRatedMovie extends Component {
 
   topRatedMovies = async key => {
     this.setState({status: apiStatusConstants.inProgress})
-    const {searchedValue} = this.state
-    if (searchedValue === '') {
-      const topRatedMoviesURL = `https://api.themoviedb.org/3/movie/top_rated?api_key=${key}&language=en-US&page=1`
+    const topRatedMoviesURL = `https://api.themoviedb.org/3/movie/top_rated?api_key=${key}&language=en-US&page=1`
 
-      const response = await fetch(topRatedMoviesURL)
-      if (response.ok === true) {
-        const data = await response.json()
-        const updatedData = data.results.map(result => ({
-          backdropPath: result.backdrop_path,
-          id: result.id,
-          adult: result.adult,
-          genreIds: result.genre_ids,
-          originalLanguage: result.original_language,
-          overview: result.overview,
-          popularity: result.popularity,
-          posterPath: result.poster_path,
-          releaseDate: format(new Date(result.release_date), 'MMM dd,yyyy'),
-          title: result.title,
-          video: result.video,
-          voteAverage: result.vote_average,
-          voteCount: result.vote_count,
-        }))
+    const response = await fetch(topRatedMoviesURL)
+    if (response.ok === true) {
+      const data = await response.json()
+      const updatedData = data.results.map(result => ({
+        backdropPath: result.backdrop_path,
+        id: result.id,
+        adult: result.adult,
+        genreIds: result.genre_ids,
+        originalLanguage: result.original_language,
+        overview: result.overview,
+        popularity: result.popularity,
+        posterPath: result.poster_path,
+        releaseDate: format(new Date(result.release_date), 'MMM dd,yyyy'),
+        title: result.title,
+        video: result.video,
+        voteAverage: result.vote_average,
+        voteCount: result.vote_count,
+      }))
 
-        this.setState({
-          topRatedMoviesData: updatedData,
-          status: apiStatusConstants.success,
-        })
-      }
-    } else {
-      const topRatedMoviesURL = `https://api.themoviedb.org/3/search/movie?api_key=${key}&language=en-US&query=${searchedValue}&page=1`
-      const response = await fetch(topRatedMoviesURL)
-      if (response.ok === true) {
-        const data = await response.json()
-        const updatedData = data.results.map(result => ({
-          backdropPath: result.backdrop_path,
-          id: result.id,
-          adult: result.adult,
-          genreIds: result.genre_ids,
-          originalLanguage: result.original_language,
-          overview: result.overview,
-          popularity: result.popularity,
-          posterPath: result.poster_path,
-          releaseDate: result.release_date,
-          title: result.title,
-          video: result.video,
-          voteAverage: result.vote_average,
-          voteCount: result.vote_count,
-        }))
-        this.setState({
-          topRatedMoviesData: updatedData,
-          status: apiStatusConstants.success,
-        })
-      }
+      this.setState({
+        topRatedMoviesData: updatedData,
+        status: apiStatusConstants.success,
+      })
     }
-  }
-
-  onSearchValue = event => {
-    const search = event.target.value
-    this.setState({search})
-  }
-
-  onSearchClick = event => {
-    event.preventDefault()
-    const {search} = this.state
-    this.setState({searchedValue: search, search: ''}, this.componentDidMount)
   }
 
   renderLoader = () => (
@@ -105,7 +64,7 @@ class TopRatedMovie extends Component {
   )
 
   renderSuccess = () => {
-    const {topRatedMoviesData, status} = this.state
+    const {topRatedMoviesData} = this.state
 
     return (
       <ul className="popular-movies">
@@ -137,15 +96,11 @@ class TopRatedMovie extends Component {
   }
 
   render() {
-    const {status, search} = this.state
+    const {status} = this.state
 
     return (
       <>
-        <Header
-          enterValue={search}
-          onSearchEnter={this.onSearchValue}
-          onSearchClick={this.onSearchClick}
-        />
+        <Header />
         {status === apiStatusConstants.inProgress
           ? this.renderLoader()
           : this.renderSuccess()}
