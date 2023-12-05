@@ -2,7 +2,7 @@ import {Component} from 'react'
 
 import './index.css'
 
-const apiKey = 'bdeb82385f84755468ab85488a72351c'
+const apiKey = '8ec417dd387e3d58d78bc240f7fec3b1'
 
 class MovieCastDetails extends Component {
   state = {
