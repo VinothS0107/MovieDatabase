@@ -1,0 +1,22 @@
+.profile {
+  width: 100px;
+  height: 100px;
+}
+.castCrew {
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  overflow-x: scroll;
+  width: 100%;
+  padding: 20px;
+}
+.castCrewEach {
+  margin: 20px;
+}
+.nameList {
+  font-size: 15px;
+}
+.name-as {
+  font-size: 15px;
+  font-weight: 400;
+}
