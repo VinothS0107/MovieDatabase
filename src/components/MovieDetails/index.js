@@ -97,34 +97,39 @@ class MovieDetails extends Component {
             backgroundSize: 'cover',
             width: '100%',
             minHeight: '90vh',
+            position: 'absolute',
+            filter: 'blur(2px)',
+            left: '0',
+            zIndex: '-1',
           }}
         >
-          <div className="movies-details-container">
-            <div className="movie-images">
-              <img
-                src={`https://image.tmdb.org/t/p/original/${singleMovie.posterPath}`}
-                alt="movieImage"
-                className="posterImage"
-              />
-            </div>
-            <div className="movie-details">
-              <h1 className="movie_name">
-                {singleMovie.originalTitle}
-                <span className="year-span">{`(${year})`}</span>
-              </h1>
+          {null}
+        </div>
+        <div className="movies-details-container">
+          <div className="movie-images">
+            <img
+              src={`https://image.tmdb.org/t/p/original/${singleMovie.posterPath}`}
+              alt="movieImage"
+              className="posterImage"
+            />
+          </div>
+          <div className="movie-details">
+            <h1 className="movie_name">
+              {singleMovie.originalTitle}
+              <span className="year-span">{`(${year})`}</span>
+            </h1>
 
-              <div className="details-List">
-                <div className="subMovieDetails">
-                  <p className="movieDetailsList">{`${singleMovie.releaseDate} `}</p>
-                  <p className="movieDetailsList">{`${genresState}`}</p>
-                  <p className="movieDetailsList">
-                    {`${singleMovie.originalLanguage}`}
-                  </p>
-                  <p className="movieDetailsList">{`${singleMovie.runtime} min`}</p>
-                </div>
-                <p className="tagline">{singleMovie.tagline}</p>
-                <p className="overView">{singleMovie.overview}</p>
+            <div className="details-List">
+              <div className="subMovieDetails">
+                <p className="movieDetailsList">{`${singleMovie.releaseDate} `}</p>
+                <p className="movieDetailsList">{`${genresState}`}</p>
+                <p className="movieDetailsList">
+                  {`${singleMovie.originalLanguage}`}
+                </p>
+                <p className="movieDetailsList">{`${singleMovie.runtime} min`}</p>
               </div>
+              <p className="tagline">{singleMovie.tagline}</p>
+              <p className="overView">{singleMovie.overview}</p>
             </div>
           </div>
         </div>
